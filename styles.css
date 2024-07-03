@@ -1,0 +1,96 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.logo{
+    margin-left: 100px;
+}
+
+.menu{
+    display: flex;
+    margin-right: 100px;
+}
+
+li{
+    list-style: none;
+    margin: 10px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+
+.landingPage{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 100px;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.content{
+    display: flex;
+    gap: 25px;
+    flex-direction: column;
+}
+
+button{
+    width: 150px;
+    padding: 10px 20px 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: #71939A;
+    color: #fff;
+}
+
+img{
+    border-radius: 20px;
+}
+
+.serviceImage{
+    width: 400px;
+}
+
+
+.container{
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.serviceBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border: 0.5px solid #c2c1c1;
+    border-radius: 20px;
+    margin: 20px;
+}
+
+.cta{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 100px 50px 100px 50px;
+    background-image: url('background.jpg');
+    background-position: center;
+}
+
+.footer{
+    display: flex;
+    justify-content: space-around;
+    padding: 100px 0 100px 0;
+}
