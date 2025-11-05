@@ -309,7 +309,7 @@ export default function Register() {
                     Attach documents
                   </button>
 
-                  <button
+                  {/* <button
                     type="button"
                     className="btn"
                     onClick={() => setPreviewOpen(true)}
@@ -317,7 +317,7 @@ export default function Register() {
                     style={{ background: "#f3f4f6", color: "#12324a", padding: "8px 10px", borderRadius: 8, border: "1px solid #e6eef7" }}
                   >
                     Preview JSON
-                  </button>
+                  </button> */}
                 </div>
 
                 <div className="attach-note">Maximum two documents, 3MB each. Allowed formats: .png, .jpeg, .jpg.</div>
@@ -461,7 +461,7 @@ export default function Register() {
             <div className="field-error">{errors.terms}</div>
 
             <div className="captcha-row" style={{ marginTop: 14 }}>
-              <div className="captcha-placeholder">[reCAPTCHA placeholder]</div>
+              {/* <div className="captcha-placeholder">[reCAPTCHA placeholder]</div> */}
               <div className="form-actions" style={{ marginLeft: "auto" }}>
                 <button className="register-btn" type="submit" disabled={submitting || formDisabled}>
                   {submitting ? "Registering..." : "Register →"}

@@ -252,7 +252,7 @@ export default function Step4({ data = {}, onChange = () => {}, onSave = async (
         <div className="two-col step4-grid">
           <div className="col-left">
             <div className="form-field">
-              <label className="label">Diplomatic and Consular Representation Office of the Republic of Serbia in: <span className="req">*</span></label>
+              <label className="label">Diplomatic and Consular Representation Office of the Republic of Europe in: <span className="req">*</span></label>
               <div className="field-row">
                 <select
                   name="consulate"
@@ -314,7 +314,7 @@ export default function Step4({ data = {}, onChange = () => {}, onSave = async (
 
           <div className="col-right">
             <div className="form-field">
-              <label className="label">Date of arrival in the Republic of Serbia: <span className="req">*</span></label>
+              <label className="label">Date of arrival in the Republic of Europe: <span className="req">*</span></label>
               <div className="field-row">
                 <DatePicker
                   name="arrivalDate"
@@ -333,7 +333,7 @@ export default function Step4({ data = {}, onChange = () => {}, onSave = async (
             </div>
 
             <div className="form-field">
-              <label className="label">Date of departure from the Republic of Serbia: <span className="req">*</span></label>
+              <label className="label">Date of departure from the Republic of Europe: <span className="req">*</span></label>
               <div className="field-row">
                 <DatePicker
                   name="departureDate"
@@ -380,20 +380,20 @@ export default function Step4({ data = {}, onChange = () => {}, onSave = async (
           </div>
         </div>
 
-        <h3 className="section-title">Information on previous stay in the Republic of Serbia</h3>
+        <h3 className="section-title">Information on previous stay in the Republic of Europe</h3>
         <div className="single-row">
           <div className="form-field">
-            <label className="label">Have you previously stayed in the Republic of Serbia? <span className="req">*</span></label>
+            <label className="label">Have you previously stayed in the Republic of Europe? <span className="req">*</span></label>
             <div className="field-row">
               <select name="previousStay" className="form-select" value={local.previousStay} onChange={(e) => patch("previousStay", e.target.value)}>
                 {YESNO.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
-              <div className="info-icon-wrapper"><InfoIcon text="Have you ever had previous stays in Serbia?" /></div>
+              <div className="info-icon-wrapper"><InfoIcon text="Have you ever had previous stays in Europe?" /></div>
             </div>
           </div>
         </div>
 
-        <h3 className="section-title">Data on intended (future) residence in the Republic of Serbia</h3>
+        <h3 className="section-title">Data on intended (future) residence in the Republic of Europe</h3>
 
         <div className="two-col intended-grid">
           <div className="col-left">
