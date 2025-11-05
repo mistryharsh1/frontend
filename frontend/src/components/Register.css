@@ -1,0 +1,282 @@
+:root {
+  --bg: #ffffff;
+  --text: #12324a;
+  --muted: #6f88a1;
+  --border: #d7e1ea;
+  --focus: #2b66a0;
+  --error: #c73b3b;
+  --accent: #2b66a0;
+  --radius: 6px;
+  --input-height: 56px;
+  --input-padding: 18px;
+}
+
+/* ---------- Page Layout ---------- */
+.register-page {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 16px 0 28px;
+  text-align: center;
+}
+
+.register-container {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.form-card,
+.info-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  padding: 28px;
+}
+
+/* ---------- Inputs ---------- */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.req {
+  color: var(--error);
+  margin-left: 3px;
+}
+
+.form-control,
+.form-select {
+  height: var(--input-height);
+  padding: 0 var(--input-padding);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  font-size: 15px;
+  transition: border-color .15s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--focus);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(43,102,160,0.1);
+}
+
+.form-select {
+  background: #fff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23344556' d='M6 8 0 0h12z'/%3E%3C/svg%3E")
+    no-repeat right 16px center;
+  background-size: 12px 8px;
+  appearance: none;
+}
+
+.field-error {
+  color: var(--error);
+  font-size: 13px;
+  min-height: 16px;
+}
+
+/* ---------- Form grid ---------- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 20px;
+  margin-top: 20px;
+}
+.form-grid .full {
+  grid-column: 1 / -1;
+}
+
+/* ---------- Buttons ---------- */
+.register-btn,
+.attach-btn,
+.more-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 22px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.register-btn:hover,
+.attach-btn:hover,
+.more-btn:hover {
+  background: #1d507d;
+}
+
+/* ---------- Password input ---------- */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-eye {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* ---------- Info Panel ---------- */
+.info-card {
+  position: relative;
+}
+.info-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.step-num {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.step-num.small {
+  width: 22px;
+  height: 22px;
+  font-size: 13px;
+}
+.step-body h4, .step-body h5 {
+  margin: 0 0 4px;
+}
+.step ul {
+  margin: 4px 0 0 16px;
+  padding: 0;
+}
+.ecitizen {
+  background: #f9fbfd;
+  border: 1px solid #e3edf6;
+  border-radius: 10px;
+  padding: 16px;
+}
+.ecitizen span {
+  color: var(--accent);
+}
+.home-link {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+/* ---------- File Upload ---------- */
+.attach-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 16px 0;
+  gap: 6px;
+}
+.file-input { display: none; }
+.file-list { list-style: none; padding: 0; margin-top: 8px; font-size: 14px; color: var(--muted); }
+.file-item { margin-bottom: 4px; }
+
+/* ---------- Password strength ---------- */
+.pw-strength { display:flex; flex-direction:column; gap:6px; margin-top:10px; }
+.strength-bars { display:flex; gap:6px; }
+.strength-block { flex:1; height:8px; background:#e6eef7; border-radius:3px; }
+.strength-block.on { background:var(--accent); }
+
+/* ---------- Checkbox rows ---------- */
+.agree-row, .terms-legend { display:flex; align-items:flex-start; gap:8px; margin-top:12px; font-size:14px; }
+
+/* ---------- Mobile responsiveness ---------- */
+@media (max-width: 1080px) {
+  .register-container {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .form-card, .info-card {
+    padding: 20px;
+  }
+  .info-card {
+    order: -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-title {
+    font-size: 18px;
+    margin: 14px 0 20px;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-control, .form-select {
+    height: 48px;
+    font-size: 14px;
+    padding: 0 14px;
+  }
+  .register-btn {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+  }
+  .info-card {
+    box-shadow: none;
+    border: none;
+    background: transparent;
+  }
+  .ecitizen {
+    padding: 12px;
+  }
+  .step {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .agree-row span {
+    font-size: 13px;
+  }
+  .terms-legend span {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    gap: 18px;
+  }
+  .form-card {
+    padding: 16px;
+  }
+  .label {
+    font-size: 13px;
+  }
+  .step-body h4, .step-body h5 {
+    font-size: 14px;
+  }
+  .register-btn {
+    font-size: 15px;
+  }
+}
