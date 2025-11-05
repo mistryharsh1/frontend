@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "./Header.css";
 
+let isLoggedIn = Boolean(localStorage.getItem("authToken"));
+console.log("isLoggedIn in Header:", isLoggedIn);
 /**
  * Header (updated)
  * - Nav: only Home + country selector
@@ -90,7 +92,7 @@ export default function Header() {
 
           {/* Auth Buttons */}
           <div className="header-actions">
-            {currentUser ? (
+            {isLoggedIn ? (
               <>
                 <button
                   className="pill"

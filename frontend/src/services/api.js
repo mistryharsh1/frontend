@@ -1,8 +1,9 @@
 // src/services/api.js
 // Centralized API client for frontend
 // Uses fetch (no external deps). Base URL configurable via REACT_APP_API_BASE_URL
-
-const DEFAULT_BASE = "https://thermometrically-riotous-jackelyn.ngrok-free.dev";
+import { detail } from "../common";
+const ip = detail.ip;
+const DEFAULT_BASE = ip;
 let API_BASE = process.env.REACT_APP_API_BASE_URL || DEFAULT_BASE;
 // ensure protocol present and remove trailing slash
 if (!/^https?:\/\//i.test(API_BASE)) {
@@ -45,7 +46,7 @@ async function doFetch(url, opts = {}) {
 }
 
 export async function register(payload = {}, files = []) {
-  const url = `${API_BASE}/v1/admin/register`;
+  const url = `${API_BASE}/v1/api/admin/register`;
   const fd = new FormData();
 
   if (Array.isArray(files) && files.length) {
@@ -70,7 +71,7 @@ export async function register(payload = {}, files = []) {
 }
 
 export async function login(credentials = {}) {
-  const url = `${API_BASE}/v1/admin/login`;
+  const url = `${API_BASE}/v1/api/admin/login`;
   try {
     const normalized = await doFetch(url, {
       method: "POST",
@@ -84,7 +85,7 @@ export async function login(credentials = {}) {
 }
 
 export async function forgotPassword(payload = {}) {
-  const url = `${API_BASE}/v1/admin/forgot_password`;
+  const url = `${API_BASE}/v1/api/admin/forgot_password`;
   try {
     const normalized = await doFetch(url, {
       method: "POST",
@@ -98,7 +99,7 @@ export async function forgotPassword(payload = {}) {
 }
 
 export async function otpVerify(otp, authToken) {
-  const url = `${API_BASE}/v1/admin/otp_verify`;
+  const url = `${API_BASE}/v1/api/admin/otp_verify`;
   try {
     const normalized = await doFetch(url, {
       method: "POST",
@@ -115,7 +116,7 @@ export async function otpVerify(otp, authToken) {
 }
 
 export async function resendOtp(authToken) {
-  const url = `${API_BASE}/v1/admin/resend_otp`;
+  const url = `${API_BASE}/v1/api/admin/resend_otp`;
   try {
     const normalized = await doFetch(url, {
       method: "POST",
@@ -132,7 +133,7 @@ export async function resendOtp(authToken) {
 }
 
 export async function resetPassword(newPassword, authToken) {
-  const url = `${API_BASE}/v1/admin/reset_password`;
+  const url = `${API_BASE}/v1/api/admin/reset_password`;
   try {
     const normalized = await doFetch(url, {
       method: "POST",
@@ -149,7 +150,7 @@ export async function resetPassword(newPassword, authToken) {
 }
 
 export async function logout(authToken) {
-  const url = `${API_BASE}/v1/admin/logout`;
+  const url = `${API_BASE}/v1/api/admin/logout`;
   try {
     const normalized = await doFetch(url, {
       method: "POST",

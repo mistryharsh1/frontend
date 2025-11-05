@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { detail } from "../common";
 
 const COUNTRIES = [
   "Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan",
@@ -32,7 +33,7 @@ Simple User Master component:
 Note: Put your auth token in localStorage under "authToken" or replace getAuth() to return token string.
 */
 
-const API_BASE = "https://thermometrically-riotous-jackelyn.ngrok-free.dev/v1/admin"; // Ensure to include http://
+const API_BASE = `${detail.ip}/v1/api/admin`;
 
 // function getAuth() {
 //   return localStorage.getItem("authToken") || ""; // set token in browser storage or paste here

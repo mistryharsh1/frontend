@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "./Header"; // Assuming Header is in the same directory
 import "./HomeNew.css";
+import { detail } from "../common";
 
 function getAuth() {
   const token = localStorage.getItem("authToken");  
@@ -33,7 +34,7 @@ export default function HomeNew() {
   // Function to fetch applications
   const fetchApplications = async () => {
     try {
-      const response = await fetch('https://thermometrically-riotous-jackelyn.ngrok-free.dev/v1/admin/applications?page=1&limit=10', {
+      const response = await fetch(`${detail.ip}/v1/api/admin/applications?page=1&limit=10`, {
         method: 'GET',
         headers: {
           'Authorization': getAuth()
@@ -54,9 +55,9 @@ export default function HomeNew() {
 
       {/* Updated button to navigate to applications */}
       <div className="container" style={{ marginTop: 12, textAlign: "right" }}>
-          <button className="btn-primary" onClick={() => navigate("/applications")}>
+          {isLoggedIn && (<button className="btn-primary" onClick={() => navigate("/applications")}>
             Show Applications
-          </button>
+          </button>)}
         {isAdmin == 1 || isAdmin == true || isAdmin == 'true' && (<button
           className="btn-primary"
           onClick={() => navigate("/user-master")}

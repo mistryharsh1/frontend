@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { detail } from "../common";
 function getAuth() {
   const token = localStorage.getItem("authToken");  
   
@@ -25,7 +26,7 @@ const ApplicationList = () => {
     setError(null);
     try {
       const res = await fetch(
-        `https://thermometrically-riotous-jackelyn.ngrok-free.dev/v1/admin/applications?page=${p}&limit=${l}`,
+        `${detail.ip}/v1/api/admin/applications?page=${p}&limit=${l}`,
         {
           method: "GET",
           headers: {

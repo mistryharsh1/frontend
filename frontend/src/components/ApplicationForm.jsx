@@ -9,6 +9,7 @@ import Step5 from "./steps/Step5";
 import Step6 from "./steps/Step6";
 import { register as mockRegister } from "../services/mockApi";
 import "./application.css";
+import { detail } from "../common";
 
 const STORAGE_KEY = "app_form_v1";
 
@@ -143,7 +144,7 @@ export default function ApplicationForm() {
 
   // helper: build FormData from merged data and POST to API; saves returned id into state+localStorage
   async function submitToServer(mergedData) {
-    const url = "https://thermometrically-riotous-jackelyn.ngrok-free.dev/v1/admin/application";
+    const url = `${detail.ip}/v1/api/admin/application`;
     const token = localStorage.getItem("authToken") || localStorage.getItem("authToken") || "";
 
     const fd = new FormData();
