@@ -1,0 +1,132 @@
+/* StepNav.css - lightweight responsive stepper */
+
+/* wrapper */
+.stepnav {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 6px 0 18px;
+}
+
+/* list */
+.stepnav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap; /* allow wrapping on narrow screens */
+}
+
+/* item */
+.stepnav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 110px;
+  text-align: center;
+  cursor: default;
+  user-select: none;
+  padding: 6px;
+  box-sizing: border-box;
+}
+.stepnav-item.clickable { cursor: pointer; }
+.stepnav-item.disabled { opacity: 0.55; cursor: default; pointer-events: none; }
+
+/* marker */
+.step-marker {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(43,102,160,0.15);
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(13,30,46,0.04);
+}
+
+/* number inside marker */
+.step-marker .num {
+  color: #2b66a0;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* dot for active */
+.step-marker .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #6ea9ff;
+  display: inline-block;
+}
+
+/* check for done */
+.step-marker .check {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  background: #17374f;
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* step title */
+.step-title {
+  font-size: 13px;
+  color: #5f7383;
+  line-height: 1.15;
+  max-height: 36px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 4px;
+}
+
+/* active styling */
+.stepnav-item.active .step-marker {
+  background: #6ea9ff;
+  border-color: #6ea9ff;
+}
+.stepnav-item.active .step-title {
+  color: #213243;
+  font-weight: 700;
+}
+
+/* done styling */
+.stepnav-item.done .step-marker {
+  background: #17374f;
+  border-color: #17374f;
+}
+.stepnav-item.done .step-title {
+  color: #213243;
+  font-weight: 700;
+}
+
+/* hover focus affordance for clickable items */
+.stepnav-item.clickable:focus,
+.stepnav-item.clickable:hover {
+  transform: translateY(-3px);
+  transition: transform .12s;
+}
+
+/* responsive adjustments */
+@media (max-width: 980px) {
+  .stepnav-list { gap: 12px; }
+  .stepnav-item { width: 94px; }
+  .step-marker { width: 40px; height: 40px; }
+  .step-title { font-size: 12px; max-height: 40px; }
+}
+
+/* small screens: allow two-row layout for stepper, center spacing */
+@media (max-width: 640px) {
+  .stepnav-list { gap: 10px; justify-content: center; }
+  .stepnav-item { width: 46%; min-width: 140px; margin-bottom: 8px; }
+  .step-marker { width: 38px; height: 38px; }
+}

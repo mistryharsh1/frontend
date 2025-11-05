@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
-import { register as mockRegister } from "../services/mockApi";
+import { register as apiRegister } from "../services/api";
 import Modal from "./Modal";
 import JsonPreview from "./JsonPreview";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Register.css";
+import { useAuth } from "../contexts/AuthContext";
 
 const COUNTRIES = [
   "Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan",
@@ -52,6 +53,7 @@ const initialState = {
 
 export default function Register() {
   const navigate = useNavigate();
+  const { login: setAuth } = useAuth();
 
   const [form, setForm] = useState(initialState);
   const [errors, setErrors] = useState({});
@@ -154,7 +156,7 @@ export default function Register() {
     return e;
   }
 
-  // --- wrapper that talks to mock API ---
+  // --- wrapper that talks to real API ---
   async function submitToServer(payload, filesArr = []) {
     // convert dates to yyyy-mm-dd strings for backend
     const toDateStr = (d) => {
@@ -164,8 +166,8 @@ export default function Register() {
     };
     const body = { ...payload, docExpiry: toDateStr(payload.docExpiry), dob: toDateStr(payload.dob) };
 
-    // call mock register (simulates network & server-side validation)
-    const res = await mockRegister(body, filesArr);
+    // call real register API
+    const res = await apiRegister(body, filesArr);
     return res;
   }
 
@@ -220,13 +222,17 @@ export default function Register() {
 
       console.log(`%c🎉 Registration successful for: ${form.firstName} ${form.lastName}`, "color:#16a34a; font-weight:bold;");
       toast.success("Registration successful");
+      // if backend returned authentication/user info, set auth state
+      try {
+        if (res.data) setAuth(res.data);
+      } catch (e) { /* ignore */ }
       setSubmitSuccess(true);
       setSuccessOpen(true);
 
       // keep success modal visible briefly, then navigate
       setTimeout(() => {
         setSuccessOpen(false);
-        navigate("/thank-you");
+        navigate("/");
       }, 900);
     } catch (err) {
       setSubmitting(false);
@@ -519,7 +525,7 @@ export default function Register() {
         open={successOpen}
         onClose={() => setSuccessOpen(false)}
         title="Registration received"
-        footer={<button onClick={() => { setSuccessOpen(false); navigate("/thank-you"); }} className="btn">Continue</button>}
+        footer={<button onClick={() => { setSuccessOpen(false); navigate("/"); }} className="btn">Continue</button>}
       >
         <div style={{ textAlign: "center", padding: 8 }}>
           <div style={{ fontSize: 42, marginBottom: 10 }}>✅</div>

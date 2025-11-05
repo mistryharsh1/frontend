@@ -1,72 +1,304 @@
-/* Step1 styles — matches your screenshot layout */
+/* Step1.css - tuned for Serbia design with .radio-card.checked fallback */
 
-/* container & headings */
-.step1-root { max-width: 980px; margin: 28px auto; padding: 0 20px; }
-.step-title { font-size: 36px; color: #20364f; font-weight: 800; margin-bottom: 18px; }
-.more-title { font-size: 24px; font-weight: 700; margin-top: 26px; color: #20364f; }
-.small-label { color: #6f88a1; margin: 6px 0 12px; }
+/* ---- Root & container sizing ---- */
+.step1-root {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 36px 24px 80px;
+  font-family: "Roboto", "Inter", system-ui, -apple-system, "Segoe UI", Arial;
+  color: #1c2e4a;
+  background: #ffffff;
+}
 
-/* simple field row */
-.field-row { margin-bottom: 16px; display:flex; flex-direction:column; gap:8px; }
-.field-label { font-weight:600; font-size:14px; color:#2d4256; }
-.form-select { height:48px; padding: 0 14px; border:1px solid #cfdde9; border-radius:8px; background:#fff; font-size:15px; color:#213243; }
-.form-select.error { border-color: #c73b3b; }
+.step1-root .container {
+  max-width: 1180px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
 
-/* big radio-list area */
-.radio-list { display:flex; flex-direction:column; gap:14px; margin-top: 6px; }
+/* ---- Page title ---- */
+.step1-root .step-title {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.06;
+  margin: 8px 0 26px;
+  text-align: center;
+  color: #1c2e4a;
+  letter-spacing: -0.2px;
+}
+
+/* ---- Stepper ---- */
+.internal-stepper,
+.stepper-list,
+.step-nav {
+  width: 100%;
+  max-width: 900px;
+  margin: 8px auto 38px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  box-sizing: border-box;
+}
+
+.stepper-list .stepper-item,
+.internal-stepper .stepper-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 90px;
+}
+
+.stepper-list .stepper-item .step-marker,
+.internal-stepper .stepper-item .step-marker {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 3px solid #9fbfe8;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.stepper-list .stepper-item.active .step-marker,
+.internal-stepper .stepper-item.active .step-marker {
+  width: 36px;
+  height: 36px;
+  border-width: 0;
+  background: #2f7bdc;
+  box-shadow: 0 10px 24px rgba(47,123,220,0.12);
+}
+
+.stepper-list .stepper-item .step-small,
+.internal-stepper .stepper-item .step-small {
+  font-size: 11px;
+  color: #94a6bf;
+  font-weight: 600;
+}
+
+.stepper-list .stepper-item .step-label,
+.internal-stepper .stepper-item .step-label {
+  font-size: 13px;
+  color: #3d5166;
+  font-weight: 700;
+}
+
+/* ---- Form column layout ---- */
+.step-wrap,
+.step1-root .form-field {
+  width: 100%;
+  max-width: 880px;
+  margin: 22px auto 0;
+  box-sizing: border-box;
+}
+
+/* headers and labels */
+.step1-root h3,
+.step1-root .section-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 28px 0 18px;
+  color: #1c2e4a;
+}
+
+.step1-root .label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4c6072;
+  margin-bottom: 8px;
+}
+
+.step1-root .req {
+  color: #d04444;
+  margin-left: 6px;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+/* ---- Select control ---- */
+.form-select {
+  height: 38px;
+  min-width: 200px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #d9e0e8;
+  background: #fff;
+  color: #1c2e4a;
+  font-size: 14px;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ---- Radio list as wide cards ---- */
+.radio-list,
+.step1-root .radio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
 
 .radio-card {
-  display:flex;
-  align-items:flex-start;
-  gap:16px;
-  padding: 18px;
-  border-radius: 8px;
-  background: #e7eef7; /* light blue background for unselected */
-  border: 1px solid rgba(43,102,160,0.06);
-  transition: background .12s ease, box-shadow .12s ease, transform .06s;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 20px 24px;
+  border-radius: 6px;
+  background: #eef5ff; /* slightly lighter than before */
+  border: 1px solid #d9e6f5;
+  transition: background 120ms ease, box-shadow 120ms ease, transform 80ms ease;
   cursor: pointer;
-  outline: none;
+  box-sizing: border-box;
 }
-.radio-card:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(6,24,50,0.06); }
-.radio-card.checked { background: #5ea0e8; color: #0f2c49; } /* selected solid blue */
-.radio-card.checked .radio-text { color: #0f2c49; font-weight:700; }
 
-/* hide native radio but keep accessible */
-.radio-card input[type="radio"] { position:absolute; opacity:0; pointer-events:none; }
-
-/* left column: circular radio */
-.radio-left { width:34px; height:34px; display:flex; align-items:center; justify-content:center; }
-.radio-dot {
-  width:16px; height:16px; border-radius:50%; border: 2px solid #284a6f; background: #fff;
-  transition: background .12s, border-color .12s, transform .12s;
+.radio-card > div {
+  flex: 1 1 auto;
 }
-.radio-dot.on { background:#0f2c49; border-color:#0f2c49; transform: scale(1.02); }
 
-/* text area */
-.radio-text { flex:1; color:#20364f; font-size:15px; line-height:1.45; padding-right:6px; }
-
-/* error line */
-.field-error { color:#c73b3b; font-size:13px; margin-top:8px; min-height:18px; }
-
-/* action buttons row */
-.step-actions { display:flex; align-items:center; justify-content:space-between; margin-top:26px; gap:12px; }
-.btn-secondary { background:#fff; color:#213243; border:1px solid #dbeaf4; padding:10px 14px; border-radius:8px; cursor:pointer; }
-.btn-primary { background:#2b66a0; color:#fff; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:700; }
-.btn-primary:disabled { opacity:0.6; cursor:not-allowed; }
-.btn-save { background:#f3f4f6; border:1px solid #dbeaf4; padding:10px 14px; border-radius:8px; cursor:pointer; }
-.btn-save.saved { background:#e6f3ff; border-color:#bfe0ff; color:#06385f; }
-
-/* responsive */
-@media (max-width: 900px) {
-  .step1-root { padding: 0 14px; }
-  .radio-card { padding:14px; }
-  .step-title { font-size:28px; }
+.radio-card .title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1c2e4a;
+  margin-bottom: 6px;
 }
-@media (max-width: 520px) {
-  .radio-card { gap:12px; padding:12px; }
-  .radio-left { width:28px; height:28px; }
-  .radio-dot { width:12px; height:12px; }
-  .radio-text { font-size:14px; }
-  .step-actions { flex-direction:column; align-items:stretch; gap:10px; }
-  .step-actions .btn-primary { width:100%; }
+
+.radio-card .desc {
+  font-size: 14px;
+  color: #4c6072;
+  line-height: 1.4;
+}
+
+/* radio input */
+.radio-card input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: #2f7bdc;
+}
+
+/* selected card appearance (applies when .checked present) */
+.radio-card.checked,
+.radio-card:has(input[type="radio"]:checked) {
+  background: #cfe3ff; /* selected background slightly darker for contrast */
+  border-color: #2f7bdc;
+  box-shadow: 0 10px 24px rgba(47,123,220,0.10);
+  transform: translateY(-1px);
+}
+
+/* hover */
+.radio-card:hover {
+  box-shadow: 0 6px 14px rgba(48,78,120,0.04);
+}
+
+/* full width within column */
+.step-wrap .radio-list .radio-card {
+  width: 100%;
+}
+
+.form-control {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #d9e0e8;
+  width: 100%;
+  max-width: 680px;
+  box-sizing: border-box;
+  font-size: 14px;
+  background: #fff;
+}
+
+/* error visuals */
+.form-control.error,
+.form-select.error {
+  border-color: #d04444;
+}
+
+.field-error {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #d04444;
+}
+
+/* ---- Footer CTA / Next step alignment ---- */
+.step-actions {
+  width: 100%;
+  max-width: 880px;
+  margin: 36px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.step-actions .left-group {
+  margin-right: auto;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Buttons */
+.btn-secondary,
+.btn-back {
+  background: transparent;
+  border: 1px solid #d3daf0;
+  padding: 8px 14px;
+  border-radius: 6px;
+  color: #1c2e4a;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-save {
+  background: #f2f6fb;
+  border: 1px solid #e6eefb;
+  color: #1c2e4a;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #1c2e4a;
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* helper note */
+.step1-root .helper-note {
+  max-width: 880px;
+  margin: 18px auto 0;
+  color: #98a8bb;
+  font-size: 12px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1200px) {
+  .step1-root .step-title { font-size: 36px; }
+  .internal-stepper { gap: 18px; max-width: 760px; }
+  .step-wrap { max-width: 720px; }
+}
+
+@media (max-width: 760px) {
+  .step1-root {
+    padding: 20px 14px 60px;
+  }
+  .step1-root .step-title { font-size: 28px; text-align: left; }
+  .internal-stepper {
+    justify-content: flex-start;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .step-wrap { padding: 0 8px; max-width: 100%; }
+  .step-actions { justify-content: flex-end; flex-direction: row; }
+  .radio-card { padding: 14px; border-radius: 6px; }
+  .stepper-list .stepper-item .step-marker { width: 28px; height: 28px; }
 }

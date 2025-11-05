@@ -1,0 +1,130 @@
+/* src/components/Footer.css
+   Modern blue footer, responsive and scroll-safe */
+
+:root {
+  --footer-bg: #123a5a;
+  --footer-light: #e0ecf7;
+  --footer-dark: #0a2b45;
+}
+
+/* FOOTER WRAPPER */
+.site-footer {
+  background: var(--footer-bg);
+  color: #fff;
+  margin-top: 60px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* INNER CONTENT */
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 60px 0 40px;
+}
+
+/* LEFT COLUMN */
+.footer-left {
+  flex: 1 1 260px;
+  min-width: 240px;
+}
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.footer-logo-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #2b66a0, #4e9cff);
+}
+.footer-logo-text {
+  font-weight: 700;
+  font-size: 16px;
+  color: #fff;
+}
+.footer-desc {
+  color: var(--footer-light);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* MIDDLE COLUMN */
+.footer-mid {
+  flex: 1 1 200px;
+  min-width: 180px;
+}
+.footer-mid h4 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+.footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.footer-links a {
+  color: var(--footer-light);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.15s ease;
+}
+.footer-links a:hover {
+  color: #fff;
+}
+
+/* RIGHT COLUMN */
+.footer-right {
+  flex: 1 1 260px;
+  min-width: 240px;
+}
+.footer-right h4 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.footer-right a {
+  color: var(--footer-light);
+  text-decoration: none;
+}
+.footer-right a:hover {
+  color: #fff;
+}
+
+/* BOTTOM LINE */
+.footer-bottom {
+  background: var(--footer-dark);
+  padding: 16px 0;
+  text-align: center;
+  font-size: 13px;
+  color: #dbe8f3;
+}
+.footer-bottom p {
+  margin: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+  }
+  .footer-right, .footer-mid, .footer-left {
+    width: 100%;
+  }
+}
+
+.footer-para{
+  color: #e0ecf7;
+}

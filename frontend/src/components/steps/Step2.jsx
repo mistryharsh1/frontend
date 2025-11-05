@@ -1,20 +1,11 @@
+// src/components/steps/Step2.jsx
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "./Step2.css";
+import "../steps/Step2.css";
+import InfoIcon from "../../components/InfoIcon";
 
-/**
- * Step2.jsx with:
- * - full country list
- * - telephone auto-prefix by originalCitizenship
- * - E.164 normalization & validation
- * - tooltips that expand inline on mobile (tap)
- *
- * Props:
- * - data, onChange, onSave, saved
- */
-
-/* Countries (same as before) */
+/* Countries (same list as before) */
 const COUNTRIES = [
   "Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan",
   "Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia",
@@ -37,7 +28,7 @@ const COUNTRIES = [
   "Vietnam","Yemen","Zambia","Zimbabwe"
 ];
 
-/* Country calling code map (extend as needed) */
+/* Country calling codes map (extend as needed) */
 const COUNTRY_CALLING_CODES = {
   "India": "+91",
   "United States": "+1",
@@ -65,46 +56,12 @@ const COUNTRY_CALLING_CODES = {
   "Saudi Arabia": "+966",
   "Turkey": "+90",
   "Russia": "+7"
-  // add more as required
 };
 
-/* InfoIcon component: shows hover/focus tooltip on desktop, inline expandable helper on touch */
-function InfoIcon({ text }) {
-  const [open, setOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 600);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  if (isMobile) {
-    // mobile: clickable small icon that toggles inline block
-    return (
-      <span className="info-icon-mobile">
-        <button type="button" className="info-dot" onClick={() => setOpen((s) => !s)} aria-expanded={open}>
-          i
-        </button>
-        {open && <div className="info-inline">{text}</div>}
-      </span>
-    );
-  }
-
-  // desktop: tooltip on hover/focus
-  return (
-    <span className="info-icon" tabIndex={0} aria-label={text}>
-      <span className="info-dot">i</span>
-      <span className="info-tooltip" role="tooltip">{text}</span>
-    </span>
-  );
-}
-
-/* E.164 helpers */
+/* Phone helpers */
 function normalizePhoneInput(value) {
   if (!value) return "";
-  let v = value.replace(/[()\s.-]/g, "");
+  let v = String(value).replace(/[()\s.-]/g, "");
   if (/^00\d+/.test(v)) v = "+" + v.slice(2);
   if (/^[0-9]+$/.test(v)) v = "+" + v;
   if (!v.startsWith("+")) v = "+" + v.replace(/^\D+/, "");
@@ -115,7 +72,7 @@ function isValidE164(value) {
   return /^\+[1-9]\d{1,14}$/.test(value);
 }
 
-export default function Step2({ data = {}, onChange = () => {}, onSave = async () => true, saved = false }) {
+export default function Step2({ data = {}, onChange = () => {}, onSave = async () => true, saved = false, showStepper = false }) {
   const [local, setLocal] = useState({
     lastName: data.lastName || "",
     lastNameAtBirth: data.lastNameAtBirth || "",
@@ -136,7 +93,7 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
 
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
-  const [isSaved, setIsSaved] = useState(Boolean(saved));
+  const [localSaved, setLocalSaved] = useState(Boolean(saved));
 
   useEffect(() => {
     setLocal({
@@ -156,7 +113,7 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
       motherFirstName: data.motherFirstName || "",
       email: data.email || ""
     });
-    setIsSaved(Boolean(saved));
+    setLocalSaved(Boolean(saved));
   }, [data, saved]);
 
   function patchLocal(name, value) {
@@ -166,7 +123,7 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
     });
     setErrors((e) => ({ ...e, [name]: undefined }));
     onChange({ [name]: value });
-    setIsSaved(false);
+    setLocalSaved(false);
   }
 
   /* when originalCitizenship changes, attempt to prefix telephone if it's local */
@@ -175,15 +132,13 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
     const calling = COUNTRY_CALLING_CODES[cc];
     if (!calling) return;
     if (!local.telephone) return;
-    // if telephone already E.164 or starts with +, do nothing
     if (local.telephone.trim().startsWith("+")) return;
-    // if only digits and reasonable length, prefix
     const digits = local.telephone.replace(/\D/g, "");
     if (digits.length >= 6 && digits.length <= 15) {
       const newVal = calling + digits;
       patchLocal("telephone", newVal);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [local.originalCitizenship]);
 
   /* phone blur normalization + validation */
@@ -215,8 +170,7 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
     return e;
   }
 
-  async function handleSave(e) {
-    e && e.preventDefault && e.preventDefault();
+  async function doSave() {
     const eobj = validate();
     setErrors(eobj);
     if (Object.keys(eobj).length > 0) {
@@ -232,7 +186,8 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
       const ok = await onSave(payload);
       setSaving(false);
       if (ok) {
-        setIsSaved(true);
+        setLocalSaved(true);
+        window.dispatchEvent(new CustomEvent("step2:next", { detail: { stepData: payload } }));
         return true;
       }
       return false;
@@ -243,16 +198,25 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
     }
   }
 
-  async function handleNext() {
-    if (!isSaved) {
-      const ok = await handleSave();
-      if (!ok) return;
+  /* respond to global save trigger */
+  useEffect(() => {
+    function onTrigger() { doSave(); }
+    window.addEventListener("triggerSaveStep2", onTrigger);
+    return () => window.removeEventListener("triggerSaveStep2", onTrigger);
+  }, []); // run once
+
+  function onNextClick() {
+    if (!localSaved) {
+      doSave().then((ok) => { if (ok) window.dispatchEvent(new CustomEvent("step2:next", { detail: { stepData: local } })); });
+      return;
     }
-    window.dispatchEvent(new CustomEvent("step2:next", { detail: { stepData: { ...local, dob: local.dob ? local.dob.toISOString().split("T")[0] : null } } }));
+    window.dispatchEvent(new CustomEvent("step2:next", { detail: { stepData: local } }));
   }
 
   return (
     <section className="step2-root">
+      {showStepper && <div className="internal-stepper" />}
+
       <h2 className="step-title">Personal information</h2>
 
       <div className="two-col">
@@ -284,7 +248,9 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
                 <option value="male">Male</option>
                 <option value="other">Other</option>
               </select>
-              <InfoIcon text="Select the gender that appears on your passport." />
+              <div className="info-icon-wrapper">
+                <InfoIcon text="Select the gender that appears on your passport." />
+              </div>
             </div>
             <div className="field-error">{errors.gender}</div>
           </div>
@@ -313,7 +279,9 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
                 <option value="">Select country</option>
                 {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
-              <InfoIcon text="Choose the country that appears on your birth certificate." />
+              <div className="info-icon-wrapper">
+                <InfoIcon text="Choose the country that appears on your birth certificate." />
+              </div>
             </div>
             <div className="field-error">{errors.countryOfBirth}</div>
           </div>
@@ -343,7 +311,9 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
                 onBlur={handlePhoneBlur}
                 placeholder="+919xxxxxxxxx"
               />
-              <InfoIcon text="Enter phone in international E.164 format, e.g. +441632960960. We will validate on save. On mobile, tap the icon for more info." />
+              <div className="info-icon-wrapper">
+                <InfoIcon text="Enter phone in international E.164 format, e.g. +441632960960. We will validate on save. On mobile, tap the icon for more info." />
+              </div>
             </div>
             <div className="field-error">{errors.telephone}</div>
           </div>
@@ -355,7 +325,9 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
                 <option value="">Select country</option>
                 {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
-              <InfoIcon text="Country that issued your passport." />
+              <div className="info-icon-wrapper">
+                <InfoIcon text="Country that issued your passport." />
+              </div>
             </div>
             <div className="field-error">{errors.passportIssuingCountry}</div>
           </div>
@@ -367,7 +339,9 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
                 <option value="">Select country</option>
                 {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
-              <InfoIcon text="Your country of citizenship. Selecting this will help us prefill your phone country code." />
+              <div className="info-icon-wrapper">
+                <InfoIcon text="Your country of citizenship. Selecting this will help us prefill your phone country code." />
+              </div>
             </div>
             <div className="field-error">{errors.originalCitizenship}</div>
           </div>
@@ -382,7 +356,9 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
                 <option value="divorced">Divorced</option>
                 <option value="widowed">Widowed</option>
               </select>
-              <InfoIcon text="Your current marital status." />
+              <div className="info-icon-wrapper">
+                <InfoIcon text="Your current marital status." />
+              </div>
             </div>
             <div className="field-error">{errors.maritalStatus}</div>
           </div>
@@ -408,13 +384,16 @@ export default function Step2({ data = {}, onChange = () => {}, onSave = async (
       </div>
 
       <div className="step-actions">
-        <button className="btn-secondary" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Back</button>
+        <div className="left-group">
+          <button className="btn-secondary" onClick={() => window.dispatchEvent(new Event("step:previous"))}>Back</button>
 
-        <div style={{ display: "flex", gap: 12 }}>
-          <button className={`btn-save ${isSaved ? "saved" : ""}`} onClick={handleSave} disabled={saving}>
-            {saving ? "Saving..." : (isSaved ? "Saved" : "Save")}
+          <button className={`btn-save ${localSaved ? "saved" : ""}`} onClick={doSave} disabled={saving}>
+            {saving ? "Saving..." : (localSaved ? "Saved" : "Save")}
           </button>
-          <button className="btn-primary" onClick={handleNext} disabled={saving || !isSaved}>
+        </div>
+
+        <div>
+          <button className="btn-primary" onClick={onNextClick} disabled={saving}>
             Next →
           </button>
         </div>

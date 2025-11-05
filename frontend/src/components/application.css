@@ -1,34 +1,161 @@
-/* application.css - layout and stepper */
-.application-root { padding: 28px 0 80px; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-.app-title { text-align:center; font-size:40px; font-weight:800; color:#20364f; margin-bottom:36px; }
+/* application.css - layout and stepper (polished & responsive) */
 
-/* Step nav */
-.stepnav { display:flex; justify-content:center; margin-bottom:28px; }
-.stepnav-list { display:flex; gap:28px; list-style:none; padding:0; margin:0; }
-.stepnav-item { display:flex; align-items:center; }
+/* Root container for application page */
+.application-root {
+  padding: 28px 0 80px;
+  box-sizing: border-box;
+}
+
+/* keep generic container but scope vertical flow for application only */
+.application-root .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;     /* stack title -> stepnav -> form */
+  align-items: center;        /* center content horizontally */
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+/* Title: keep visually prominent, align left within max-width to match screenshot */
+.app-title {
+  width: 100%;
+  max-width: 1100px;
+  text-align: left;
+  font-size: 40px;
+  font-weight: 800;
+  color: #20364f;
+  margin: 6px 0 24px;
+  box-sizing: border-box;
+}
+
+/* Step nav (centred under the title) */
+.stepnav {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+  box-sizing: border-box;
+}
+
+/* list: allow wrapping */
+.stepnav-list {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap; /* wrap markers on small screens */
+}
+
+/* each list item: keep compact */
+.stepnav-item {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 8px;
+  width: 110px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* keep your step button / bubble styling (untouched) */
 .stepbtn { display:flex; flex-direction:column; align-items:center; gap:8px; background:transparent; border:none; cursor:pointer; }
 .stepbtn .bubble { display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:50%; background:#e9f2ff; color:#184b75; font-weight:700; border:2px solid rgba(43,102,160,0.15); }
-.stepnav-item.active .bubble { background:#2b66a0; color:#fff; border-color:#2b66a0; }
+.stepnav-item.active .bubble,
+.stepnav-item.active .stepbtn .bubble { background:#2b66a0; color:#fff; border-color:#2b66a0; }
 .stepnav-item.saved .bubble { background:#dff3e6; color:#0b6f3c; border-color:#cfeedd; }
 .stepbtn .label { font-size:13px; color:#7b8b98; max-width:120px; text-align:center; }
 
-/* step wrap */
-.step-wrap { margin-top: 24px; }
+/* Step content wrapper: keep a constrained reading width and center it */
+.step-wrap {
+  margin-top: 8px;
+  width: 100%;
+  max-width: 880px; /* control width so form doesn't sit only on right */
+  box-sizing: border-box;
+}
 
-/* footer actions */
-.form-footer { margin-top:28px; display:flex; justify-content:center; }
-.footer-actions { width:100%; max-width:1200px; display:flex; justify-content:space-between; gap:12px; align-items:center; padding:0 20px; box-sizing:border-box; }
+/* Preserve two-column grids inside steps, but set responsive behavior */
+.step-wrap .two-col {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 36px;
+  align-items: start;
+  box-sizing: border-box;
+}
 
-/* buttons (reuse your theme if needed) */
+/* If any step uses .col classes, ensure they are full width inside constrained wrapper */
+.step-wrap .col,
+.step-wrap .col-left,
+.step-wrap .col-right {
+  box-sizing: border-box;
+}
+
+/* Footer and actions (centered under form) */
+.form-footer {
+  margin-top: 28px;
+  width: 100%;
+  max-width: 880px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+.footer-actions {
+  width: 100%;
+  max-width: 880px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+/* Buttons (your theme) */
 .btn-primary { background:#2b66a0; color:#fff; border:none; padding:10px 16px; border-radius:8px; font-weight:700; cursor:pointer; }
 .btn-secondary { background:#fff; border:1px solid #dbeaf4; padding:10px 14px; border-radius:8px; cursor:pointer; }
 .btn-save { background:#f3f4f6; border:1px solid #dbeaf4; padding:10px 14px; border-radius:8px; cursor:pointer; }
 .btn-save.saved { background:#e6f3ff; border-color:#bfe0ff; color:#06385f; }
 
-/* responsive */
-@media (max-width: 980px) {
-  .stepnav-list { gap: 14px; flex-wrap:wrap; justify-content:center; }
-  .app-title { font-size:28px; }
-  .footer-actions { flex-direction:column; gap:12px; align-items:stretch; }
+/* Make sure StepNav markers don't push content off-screen */
+.stepnav-list .stepnav-item { min-width: 64px; }
+
+/* a11y focus style for keyboards */
+.stepbtn:focus { outline: 3px solid rgba(43,102,160,0.12); outline-offset: 3px; border-radius: 8px; }
+
+/* responsive: collapse the two-column layout earlier so content uses full width */
+@media (max-width: 1200px) {
+  .step-wrap .two-col {
+    grid-template-columns: 1fr; /* collapse to single column */
+  }
+  .app-title { font-size: 36px; }
+  .stepnav { margin-bottom: 14px; }
+}
+
+/* mobile: stack footer actions and expand buttons */
+@media (max-width: 760px) {
+  .application-root { padding: 18px 0 60px; }
+  .application-root .container { padding: 0 14px; }
+  .app-title { font-size: 30px; }
+  .stepnav-list { gap: 12px; }
+  .stepwrap { max-width: 100%; }
+  .footer-actions { flex-direction: column; gap: 12px; align-items: stretch; }
+  .btn-primary { width: 100%; }
+}
+
+/* fix for any absolutely-positioned stepper remnants: force normal flow */
+.stepnav, .stepnav-list, .stepnav-item {
+  position: static !important;
+}
+
+/* Utility small adjustments (prevent very long labels from overflowing) */
+.stepbtn .label { white-space: normal; word-wrap: break-word; }
+
+/* preserve existing behavior on larger screens */
+@media (min-width: 1400px) {
+  .application-root .container { max-width: 1280px; }
 }

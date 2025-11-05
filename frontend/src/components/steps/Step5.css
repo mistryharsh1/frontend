@@ -1,0 +1,141 @@
+/* Step5.css - updated to match design (left-aligned column, preview, helper text, download links) */
+
+.step5-root {
+  max-width: 880px;
+  margin: 24px auto;
+  padding: 0 28px 80px;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+  color: #20364f;
+  box-sizing: border-box;
+}
+
+.step-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #1c2e4a;
+  margin-bottom: 8px;
+}
+
+.step5-sub {
+  color: #5a6b7a;
+  margin: 6px 0 22px 0;
+  font-size: 14px;
+}
+
+/* doc block list */
+.docs-list { display: block; }
+
+/* each document slot */
+.doc-block { margin-bottom: 22px; }
+
+/* label */
+.label { display:block; font-weight:700; color:#213243; font-size:14px; margin: 8px 0; }
+
+/* dropzone visuals */
+.dropzone {
+  border: 1px dashed #dbeaf4;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fbfdff;
+  cursor: pointer;
+  transition: box-shadow .12s, border-color .12s;
+  display: block;
+}
+.dropzone.drag-over {
+  border-color: #2b66a0;
+  box-shadow: 0 8px 24px rgba(43,102,160,0.06);
+}
+
+/* empty state */
+.dropzone-empty { display:flex; flex-direction:column; gap:8px; align-items:flex-start; color:#1f3346; }
+.file-name {
+  height: 40px;
+  min-width: 220px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #cfdde9;
+  background: #f9fbfd;
+  display:flex;
+  align-items:center;
+  font-size:14px;
+  color:#6b7280;
+}
+
+/* select file button shown inline */
+.btn-select {
+  background: #fff;
+  border: 1px solid #cfdde9;
+  color: #213243;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+/* preview state */
+.dropzone-preview { display:flex; gap:12px; align-items:center; }
+.thumb {
+  width: 120px;
+  height: 120px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid #e6eef7;
+  object-fit: cover;
+}
+
+/* download link and small helper text */
+.download-link {
+  color: #1e88ff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+}
+.docs-list .helper { color:#6b7280; font-size:13px; margin-top:8px; }
+
+/* upload progress */
+.upload-progress { height: 8px; background: #eef6ff; border-radius: 6px; overflow: hidden; width: 100%; margin-top:8px; }
+.upload-progress-bar { height:100%; background: linear-gradient(90deg,#6ea9ff,#2b66a0); width:0%; transition: width .18s ease-in-out; }
+
+/* remove / small actions */
+.btn-secondary.btn-small {
+  background: #fff;
+  border: 1px solid #dbeaf4;
+  color: #213243;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* small helper row under each upload */
+.doc-block > div + div { margin-top: 8px; }
+
+/* error */
+.field-error { color:#c73b3b; font-size:13px; margin-top:8px; min-height:18px; }
+
+/* bottom action row */
+.step-actions {
+  margin-top: 28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  max-width: 880px;
+}
+.btn-secondary { background:#fff; border:1px solid #dbeaf4; padding:10px 14px; border-radius:8px; cursor:pointer; color:#213243; }
+.btn-primary { background:#1c2e4a; color:#fff; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:700; }
+.btn-save { background:#f3f4f6; border:1px solid #dbeaf4; padding:10px 14px; border-radius:8px; cursor:pointer; }
+.btn-save.saved { background:#e6f3ff; border-color:#bfe0ff; color:#06385f; }
+
+/* global errors */
+.global-errors { margin-top: 12px; }
+
+/* responsive */
+@media (max-width: 980px) {
+  .step5-root { padding: 0 18px 48px; }
+  .step-title { font-size: 28px; }
+  .thumb { width: 100px; height: 100px; }
+  .file-name { min-width: 160px; height: 38px; }
+  .info-tooltip { display:none !important; }
+  .step-actions { flex-direction:column; align-items:stretch; gap:12px; }
+  .btn-primary { width:100%; }
+}

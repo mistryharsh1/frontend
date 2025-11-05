@@ -1,0 +1,194 @@
+/* Step4.css - pixel tuned to match design and Steps 1-3 visual system */
+
+/* Root */
+.step4-root {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 28px 24px 90px;
+  margin: 0 auto;
+  font-family: "Inter", "Roboto", system-ui, -apple-system, "Segoe UI", Arial;
+  color: #1c2e4a;
+  background: #ffffff;
+}
+
+/* Page title */
+.step-title {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.06;
+  text-align: center;
+  margin: 12px 0 40px;
+  color: #1c2e4a;
+  letter-spacing: -0.3px;
+}
+
+/* Container */
+.form-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Top grid */
+.two-col.step4-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 48px;
+  align-items: start;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+/* intended residence grid */
+.two-col.intended-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 880px;
+  margin: 20px auto 0;
+}
+
+/* single row (full width) */
+.single-row { max-width: 880px; margin: 16px auto 0; }
+
+/* section titles */
+.section-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1c2e4a;
+  margin: 40px 0 18px;
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* form fields */
+.form-field { margin-bottom: 18px; display:block; }
+.field-row { display:flex; align-items:center; gap:10px; }
+
+/* labels */
+.label { font-weight: 700; font-size: 13px; color: #4c6072; margin-bottom: 8px; display:block; }
+.req { color: #d04444; font-weight: 800; margin-left: 6px; }
+
+/* inputs/selects */
+.form-control, .form-select {
+  height: 44px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid #cfdde9;
+  background: #f9fbfd;
+  color: #1c2e4a;
+  font-size: 15px;
+  box-sizing: border-box;
+  outline: none;
+  transition: all .12s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #8fb8ef;
+  box-shadow: 0 4px 16px rgba(33,86,168,0.08);
+  background: #fff;
+}
+
+.form-control.error, .form-select.error { border-color: #d04444; }
+
+/* datepicker wrappers */
+.react-datepicker-wrapper,
+.react-datepicker__input-container { width: 100%; }
+
+/* small helper text */
+.hint { color: #98a8bb; font-size: 13px; }
+
+/* info icon */
+.info-icon-wrapper { position: relative; display:inline-flex; align-items:center; justify-content:center; }
+.info-icon { display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; background:#f8d86b; color:#1c2e4a; font-weight:700; font-size:12px; border:1px solid rgba(0,0,0,0.04); cursor:pointer; }
+
+.info-tooltip {
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%) translateY(-6px);
+  bottom: calc(100% + 8px);
+  background:#213243;
+  color:#fff;
+  padding:8px 10px;
+  border-radius:6px;
+  font-size:13px;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .12s, transform .12s;
+  z-index:60;
+}
+.info-icon-wrapper:hover .info-tooltip,
+.info-icon-wrapper:focus-within .info-tooltip { opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto; }
+
+/* errors */
+.field-error { color:#d04444; font-size:13px; min-height:18px; margin-top:6px; }
+
+/* notes */
+.notes { max-width: 880px; margin: 18px auto 0; }
+
+/* step actions */
+.step-actions {
+  max-width: 880px;
+  margin: 44px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-sizing: border-box;
+}
+.left-group { display:flex; align-items:center; gap:12px; }
+.right-group { display:flex; align-items:center; gap:12px; }
+
+/* buttons */
+.btn-secondary { background:#fff; border:1px solid #dbeaf4; padding:10px 16px; border-radius:8px; color:#1c2e4a; font-weight:700; cursor:pointer; }
+.btn-save { background:#f2f6fb; border:1px solid #e6eefb; padding:10px 16px; border-radius:8px; color:#1c2e4a; font-weight:700; cursor:pointer; }
+.btn-save.saved { background:#e6f3ff; border-color:#bfe0ff; }
+.btn-primary { background:#1c2e4a; color:#fff; padding:10px 20px; border-radius:8px; border:none; font-weight:800; cursor:pointer; }
+
+button:disabled { opacity:0.6; cursor:not-allowed; }
+
+/* responsive */
+@media (max-width: 980px) {
+  .two-col.step4-grid { grid-template-columns: 1fr; gap: 24px; padding: 0 8px; }
+  .two-col.intended-grid { grid-template-columns: 1fr; gap: 20px; padding: 0 8px; }
+  .section-title { font-size: 26px; text-align: left; margin-left: 4px; }
+  .step-title { font-size: 30px; text-align: left; margin-left: 4px; }
+  .step-actions { flex-direction: column; align-items: stretch; gap: 12px; padding: 0 12px; }
+  .btn-primary { width: 100%; }
+  .info-tooltip { display:none !important; }
+}
+/* react-select small overrides to match .form-select look */
+.react-select__control {
+  min-height: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid #cfdde9;
+  background: #f9fbfd;
+  box-shadow: none;
+  padding: 0 6px;
+}
+
+.react-select__control--is-focused {
+  border-color: #8fb8ef;
+  box-shadow: 0 4px 16px rgba(33, 86, 168, 0.08);
+}
+
+.react-select__value-container {
+  padding: 0 8px;
+  font-size: 15px;
+  color: #1c2e4a;
+}
+
+.react-select__single-value {
+  color: #1c2e4a;
+}
+
+.react-select__menu {
+  z-index: 2000;
+}
+
+.react-select__placeholder {
+  color: #6f8496;
+}

@@ -1,98 +1,197 @@
-import React, { useState, useEffect } from "react";
-import "./Step1.css";
+import React, { useEffect, useState } from "react";
+import "../steps/Step1.css";
+import InfoIcon from "../InfoIcon";
 
 /**
- * Props:
- * - data: { travelPurpose: string, specificPurpose: string }
- * - onChange: function(patchObj) -> merges patch into step data (parent)
- * - onSave: async function(stepData) -> should return truthy on success (parent controls enabling Next)
- * - saved: optional boolean (parent may pass if step already saved)
+ * Step1 - Travel purpose (dynamic radio list based on select)
+ *
+ * Behavior changes:
+ *  - radio options shown depend on dropdown (travelPurpose)
+ *  - if selected specificPurpose is not available after switching dropdown, it will be cleared
  */
-export default function Step1({ data = {}, onChange = () => {}, onSave = async () => true, saved = false }) {
+
+const OPTIONS_BY_PURPOSE = {
+  study: [
+    {
+      value: "study_degree",
+      title: "University study (degree programme)",
+      desc: "Long-term study at a higher education institution (degree programme, exchange)."
+    },
+    {
+      value: "study_training",
+      title: "Training and development (professional practice, specialization)",
+      desc: "Professional practice, internship, training, specialization or other short training."
+    },
+    {
+      value: "study_other",
+      title: "Other study purpose",
+      desc: "If your study type is not listed, choose Other and specify below."
+    }
+  ],
+  employment: [
+    {
+      value: "employment_contract",
+      title: "Employment on the grounds of an employment contract",
+      desc: "Employment on the grounds of an employment contract or another contract exercising workplace rights"
+    },
+    {
+      value: "self_employment",
+      title: "Enrolled in the registration decision (self-employment)",
+      desc: "Enrolled in the registration decision (self-employment)"
+    },
+    {
+      value: "business_agreement",
+      title: "Agreement on business and technical cooperation",
+      desc: "Agreement on business and technical cooperation (informed persons)"
+    },
+    {
+      value: "movement_within_company",
+      title: "Movement within the company",
+      desc: "Temporary movement within the company"
+    },
+    {
+      value: "independent_professional",
+      title: "Independent professional",
+      desc: "Independent professional activity"
+    },
+    {
+      value: "employment_other",
+      title: "Other",
+      desc: "If your purpose is not listed, choose Other and specify below."
+    }
+  ],
+  family: [
+    {
+      value: "family_reunification_spouse",
+      title: "Family reunification - spouse/partner",
+      desc: "Reunification with spouse or registered partner."
+    },
+    {
+      value: "family_reunification_children",
+      title: "Family reunification - children",
+      desc: "Reunification with dependent children."
+    },
+    {
+      value: "family_other",
+      title: "Other family reunification",
+      desc: "If your family reunification type is not listed, choose Other and specify below."
+    }
+  ],
+  research: [
+    {
+      value: "research_academic",
+      title: "Research at a university or institute",
+      desc: "Research activity at a recognized academic or research institution."
+    },
+    {
+      value: "research_project",
+      title: "Research on a funded project",
+      desc: "Work on a funded research project."
+    },
+    {
+      value: "research_other",
+      title: "Other research purpose",
+      desc: "If your research purpose is not listed, choose Other and specify below."
+    }
+  ],
+  other: [
+    {
+      value: "other_general",
+      title: "Other purpose",
+      desc: "If your purpose is not listed above, choose Other and specify below."
+    }
+  ]
+};
+
+export default function Step1({
+  data = {},
+  onChange = () => {},
+  onSave = async () => true,
+  saved = false,
+  showStepper = false
+}) {
   const [local, setLocal] = useState({
     travelPurpose: data.travelPurpose || "",
     specificPurpose: data.specificPurpose || "",
+    otherPurposeText: data.otherPurposeText || ""
   });
+
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
-  const [isSaved, setIsSaved] = useState(Boolean(saved));
+  const [localSaved, setLocalSaved] = useState(Boolean(saved));
 
+  // sync with incoming data
   useEffect(() => {
-    // sync if parent changes data externally
     setLocal({
       travelPurpose: data.travelPurpose || "",
       specificPurpose: data.specificPurpose || "",
+      otherPurposeText: data.otherPurposeText || ""
     });
-  }, [data]);
+    setLocalSaved(Boolean(saved));
+  }, [data, saved]);
 
-  // options for the travel purpose select (simple example; extend as needed)
-  const TRAVEL_PURPOSES = [
-    { value: "employment", label: "Employment" },
-    { value: "study", label: "Study" },
-    { value: "family", label: "Family reunification" },
-    { value: "other", label: "Other" },
-  ];
-
-  // specific purposes as seen in screenshot 2
-  const SPECIFIC_PURPOSES = [
-    { value: "employment_contract", label: "Employment on the grounds of an employment contract or another contract exercising workplace rights" },
-    { value: "self_employment", label: "Enrolled in the registration decision (self-employment)" },
-    { value: "business_cooperation", label: "Agreement on business and technical cooperation (informed persons)" },
-    { value: "movement_within_company", label: "Movement within the company" },
-    { value: "independent_professional", label: "Independent professional" },
-    { value: "training_development", label: "Training and development (professional practice, specialization, training, internship, work experience, professional training/development)" },
-    { value: "volunteering", label: "Volunteering" },
-    { value: "journalist", label: "Accredited foreign journalist" },
-    { value: "projects_state", label: "Realization of projects with state authorities of RS" },
-    { value: "hiring_team_member", label: "Hiring a member of the author's and acting team who produce an audio-visual work on the territory of the RS" },
-    // add more rows if needed to match your exact list
-  ];
-
-  function handleChange(field, value) {
-    setLocal((s) => ({ ...s, [field]: value }));
-    setErrors((errs) => ({ ...errs, [field]: undefined }));
-    // notify parent
-    onChange({ [field]: value });
-    // mark unsaved when user edits
-    setIsSaved(false);
+  // helper: get options for current travel purpose
+  function getOptionsForPurpose(purpose) {
+    if (!purpose) return [];
+    const key = purpose.toLowerCase();
+    return OPTIONS_BY_PURPOSE[key] || [];
   }
 
-  function validateLocal() {
+  // patch local and propagate up
+  function patch(name, value) {
+    setLocal((s) => {
+      const next = { ...s, [name]: value };
+      return next;
+    });
+    setErrors((e) => ({ ...e, [name]: undefined }));
+    onChange({ [name]: value });
+    setLocalSaved(false);
+  }
+
+  // when travelPurpose changes we may need to clear specificPurpose if not in new options
+  useEffect(() => {
+    const opts = getOptionsForPurpose(local.travelPurpose);
+    if (local.specificPurpose) {
+      const present = opts.some((o) => o.value === local.specificPurpose);
+      if (!present) {
+        // clear specific purpose and other text
+        setLocal((s) => ({ ...s, specificPurpose: "", otherPurposeText: "" }));
+        onChange({ specificPurpose: "", otherPurposeText: "" });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [local.travelPurpose]); // run when travelPurpose changes
+
+  function validate() {
     const e = {};
-    if (!local.travelPurpose || local.travelPurpose.trim() === "") {
-      e.travelPurpose = "Please select travel purpose";
-    }
-    if (!local.specificPurpose || local.specificPurpose.trim() === "") {
-      e.specificPurpose = "Please select a specific travel purpose";
-    }
+    if (!local.travelPurpose) e.travelPurpose = "Please select a travel purpose";
+    if (!local.specificPurpose) e.specificPurpose = "Please select a more specific purpose";
+    if (local.specificPurpose && local.specificPurpose.endsWith("_other") && !local.otherPurposeText.trim()) e.otherPurposeText = "Please specify the purpose";
+    if (local.specificPurpose === "other_general" && !local.otherPurposeText.trim()) e.otherPurposeText = "Please specify the purpose";
     return e;
   }
 
-  async function handleSave(e) {
-    e && e.preventDefault && e.preventDefault();
-    const eobj = validateLocal();
-    setErrors(eobj);
-    if (Object.keys(eobj).length > 0) {
-      // scroll to first error for better UX
-      const firstKey = Object.keys(eobj)[0];
-      const el = document.querySelector(`[name="${firstKey}"]`);
+  async function doSave() {
+    const e = validate();
+    setErrors(e);
+    if (Object.keys(e).length > 0) {
+      const first = Object.keys(e)[0];
+      const el = document.querySelector(`[name="${first}"]`);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
       return false;
     }
 
     setSaving(true);
     try {
-      // call parent save handler; respect its return value.
-      const ok = await onSave({ ...local });
+      const payload = { ...local };
+      const ok = await onSave(payload);
+      setSaving(false);
       if (ok) {
-        setIsSaved(true);
-        setSaving(false);
+        setLocalSaved(true);
+        window.dispatchEvent(new CustomEvent("step1:next", { detail: { stepData: payload } }));
         return true;
-      } else {
-        // parent indicated failure
-        setSaving(false);
-        return false;
       }
+      return false;
     } catch (err) {
       console.error("Step1 save error:", err);
       setSaving(false);
@@ -100,93 +199,118 @@ export default function Step1({ data = {}, onChange = () => {}, onSave = async (
     }
   }
 
+  // respond to global save trigger
+  useEffect(() => {
+    function onTrigger() { doSave(); }
+    window.addEventListener("triggerSaveStep1", onTrigger);
+    return () => window.removeEventListener("triggerSaveStep1", onTrigger);
+  }, []); // run once
+
+  function onNextClick() {
+    if (!localSaved) {
+      doSave().then((ok) => {
+        if (ok) window.dispatchEvent(new CustomEvent("step1:next", { detail: { stepData: local } }));
+      });
+      return;
+    }
+    window.dispatchEvent(new CustomEvent("step1:next", { detail: { stepData: local } }));
+  }
+
+  const currentOptions = getOptionsForPurpose(local.travelPurpose);
+
   return (
     <section className="step1-root">
+      {showStepper && <div className="internal-stepper" />}
+
       <h2 className="step-title">Travel purpose</h2>
 
-      <div className="field-row">
-        <label className="field-label" htmlFor="travelPurpose">Travel purpose <span className="req">*</span></label>
-        <select
-          id="travelPurpose"
-          name="travelPurpose"
-          value={local.travelPurpose}
-          onChange={(ev) => handleChange("travelPurpose", ev.target.value)}
-          className={`form-select ${errors.travelPurpose ? "error" : ""}`}
-        >
-          <option value="">Select travel purpose</option>
-          {TRAVEL_PURPOSES.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
+      <div className="form-field">
+        <label className="label">Travel purpose <span className="req">*</span></label>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <select
+            name="travelPurpose"
+            className={`form-select ${errors.travelPurpose ? "error" : ""}`}
+            value={local.travelPurpose}
+            onChange={(e) => patch("travelPurpose", e.target.value)}
+          >
+            <option value="">Select purpose</option>
+            <option value="study">Study</option>
+            <option value="employment">Employment</option>
+            <option value="family">Family reunification</option>
+            <option value="research">Research</option>
+            <option value="other">Other</option>
+          </select>
+          <InfoIcon text="Select the primary reason for your stay (used to guide required documents)." />
+        </div>
         <div className="field-error">{errors.travelPurpose}</div>
       </div>
 
-      <div className="more-specific">
-        <h3 className="more-title">More specific travel purpose:</h3>
-        <p className="small-label">Select specific purpose <span className="req">*</span></p>
+      <div style={{ marginTop: 18 }}>
+        <h3 style={{ margin: "0 0 10px 0", fontSize: 20, color: "#213243" }}>More specific travel purpose:</h3>
+        <div className="form-field">
+          <label className="label">Select specific purpose <span className="req">*</span></label>
 
-        <div className="radio-list">
-          {SPECIFIC_PURPOSES.map((opt) => {
-            const checked = local.specificPurpose === opt.value;
-            return (
-              <label
-                key={opt.value}
-                className={`radio-card ${checked ? "checked" : ""}`}
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === " " || e.key === "Enter") {
-                    e.preventDefault();
-                    handleChange("specificPurpose", opt.value);
-                  }
-                }}
-              >
-                <input
-                  type="radio"
-                  name="specificPurpose"
-                  value={opt.value}
-                  checked={checked}
-                  onChange={() => handleChange("specificPurpose", opt.value)}
-                />
-                <div className="radio-left" aria-hidden>
-                  <span className={`radio-dot ${checked ? "on" : ""}`} />
-                </div>
-                <div className="radio-text">{opt.label}</div>
-              </label>
-            );
-          })}
+          {/* If no travel purpose chosen, show helper prompt */}
+          {local.travelPurpose === "" ? (
+            <div style={{ color: "#98a8bb", fontSize: 14, maxWidth: 760 }}>
+              Please select the main travel purpose from the dropdown above to see specific options.
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 18 }} className="radio-list">
+              {currentOptions.length === 0 ? (
+                <div style={{ color: "#98a8bb" }}>No specific options available for this purpose.</div>
+              ) : (
+                currentOptions.map((opt) => (
+                  <label
+                    key={opt.value}
+                    className={`radio-card ${local.specificPurpose === opt.value ? "checked" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      name="specificPurpose"
+                      value={opt.value}
+                      checked={local.specificPurpose === opt.value}
+                      onChange={() => patch("specificPurpose", opt.value)}
+                    />
+                    <div>
+                      <div className="title">{opt.title}</div>
+                      <div className="desc">{opt.desc}</div>
+
+                      {/* if this option represents "other", show text input */}
+                      {(opt.value.endsWith("_other") || opt.value === "other_general") && local.specificPurpose === opt.value && (
+                        <div style={{ marginTop: 8 }}>
+                          <input
+                            name="otherPurposeText"
+                            className={`form-control ${errors.otherPurposeText ? "error" : ""}`}
+                            placeholder="Describe the purpose"
+                            value={local.otherPurposeText}
+                            onChange={(e) => patch("otherPurposeText", e.target.value)}
+                          />
+                          <div className="field-error">{errors.otherPurposeText}</div>
+                        </div>
+                      )}
+                    </div>
+                  </label>
+                ))
+              )}
+            </div>
+          )}
+
+          <div className="field-error">{errors.specificPurpose}</div>
         </div>
-
-        <div className="field-error">{errors.specificPurpose}</div>
       </div>
 
-      <div className="step-actions">
-        <button className="btn-secondary" onClick={() => { /* parent handles previous navigation */ window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-          Back
-        </button>
+      <div className="step-actions" style={{ marginTop: 22 }}>
+        <div className="left-group">
+          <button className="btn-secondary" onClick={() => window.dispatchEvent(new Event("step:previous"))}>Back</button>
 
-        <div style={{ display: "flex", gap: 12 }}>
-          <button
-            className={`btn-save ${isSaved ? "saved" : ""}`}
-            onClick={handleSave}
-            disabled={saving}
-            title={isSaved ? "Saved" : "Save"}
-          >
-            {saving ? "Saving..." : (isSaved ? "Saved" : "Save")}
+          <button className={`btn-save ${localSaved ? "saved" : ""}`} onClick={doSave} disabled={saving}>
+            {saving ? "Saving..." : (localSaved ? "Saved" : "Save")}
           </button>
+        </div>
 
-          {/* parent should disable Next until saved; show disabled here too for safety */}
-          <button
-            className="btn-primary"
-            onClick={async (e) => {
-              // ensure saved before moving next; if not saved, attempt save
-              if (!isSaved) {
-                const ok = await handleSave();
-                if (!ok) return;
-              }
-              // fire custom event so parent can go to next step, or parent can pass callback
-              const ev = new CustomEvent("step1:next", { detail: { stepData: local } });
-              window.dispatchEvent(ev);
-            }}
-            disabled={saving || !isSaved}
-          >
+        <div>
+          <button className="btn-primary" onClick={onNextClick} disabled={saving}>
             Next →
           </button>
         </div>

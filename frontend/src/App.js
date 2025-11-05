@@ -1,42 +1,56 @@
+// src/App.js
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import HomeNew from "./components/HomeNew";
+import ApplicationForm from "./components/ApplicationForm";
+import Login from "./components/Login";
 import Register from "./components/Register";
 import ThankYou from "./components/ThankYou";
-import Home from "./components/Home";
-import { ToastContainer } from "react-toastify";
-import ApplicationForm from "./components/ApplicationForm"; // ✅ add this import
+import ForgotPassword from "./components/ForgotPassword";
+import OtpVerify from "./components/OtpVerify";
+import ResetPassword from "./components/ResetPassword";
+import { AuthProvider } from "./contexts/AuthContext";
+import UserMaster from "./components/UserMaster";
+import ApplicationList from "./components/ApplicationList";
+import "./App.css";
 
+function Layout() {
+  const location = useLocation();
+  const isHome = location.pathname === "/" || location.pathname === "/home";
 
-export default function App() {
   return (
-    <>
-      <div className="app-shell">
-        <header className="app-header">
-          <div className="container">
-            <Link to="/" className="logo">Portal</Link>
-            <nav className="nav">
-              <Link to="/register">Register</Link>
-              <Link to="/">Home</Link>
-            </nav>
-          </div>
-        </header>
+    <AuthProvider>
+      {/* Header visible on all pages except home */}
+      {!isHome && <Header />}
 
-        <main className="app-main">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/thank-you" element={<ThankYou />} />
-            <Route path="*" element={<Home />} />
-             <Route path="/application" element={<ApplicationForm />} />
-          </Routes>
-        </main>
+      <main className="main-content">
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<HomeNew />} />
+          <Route path="/home" element={<HomeNew />} />
+          <Route path="/application" element={<ApplicationForm />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/thankyou" element={<ThankYou />} />
 
-        <footer className="app-footer">
-          <div className="container">© {new Date().getFullYear()} Portal</div>
-        </footer>
-      </div>
+          {/* Password / OTP routes */}
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/otp-verify" element={<OtpVerify />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/application" element={<ApplicationForm />} />
+          <Route path="/user-master" element={<UserMaster />} />
+          <Route path="/applications" element={<ApplicationList />} /> {/* New route */}
+          {/* other routes */}
+        </Routes>
+      </main>
 
-      <ToastContainer position="top-right" autoClose={3500} />
-    </>
+      {/* Footer visible on all pages except home */}
+      {<Footer />}
+    </AuthProvider>
   );
 }
+
+export default Layout;
